@@ -23,5 +23,10 @@ int main()
     int integer = ascii_to_int(string2);
     printf("%d\n", integer);
 
+    int decimal = -256;
+    char buffer1[] = "0000000000000000";
+
+    printf("%s\n", dec_to_binary(decimal, buffer1, sizeof(buffer1)));
+
     return 0;
 }

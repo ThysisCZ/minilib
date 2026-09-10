@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <assert.h>
+#include <stdint.h>
+#include <math.h>
 
 #ifndef MLDEF
 #define MLDEF static inline
@@ -14,12 +17,20 @@ MLDEF int array_max(int array[], int length);
 MLDEF char *str_reverse(char string[]);
 MLDEF int ascii_to_int(char string[]);
 MLDEF bool is_ascii_digit(int code);
+MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size);
 
 #define ASCII_MIN_DIGIT 48
 #define ASCII_MAX_DIGIT 57
 #define ASCII_SPACE 32
 #define ASCII_PLUS 43
 #define ASCII_MINUS 45
+
+#define PLUS_SIGN 1
+#define MINUS_SIGN -1
+
+#define BINARY_BUFFER_LENGTH 17
+#define MIN_DECIMAL_TO_BINARY -32768
+#define MAX_DECIMAL_TO_BINARY 32767
 
 #endif // MINILIB_H_
 
@@ -88,7 +99,7 @@ MLDEF int ascii_to_int(char string[])
     int result = 0;
     int current_code = 0;
     int next_code = 0;
-    int sign = 1;
+    int sign = PLUS_SIGN;
     const int base = 10;
 
     for (int i = 0; i < strlen(string); i++)
@@ -117,7 +128,7 @@ MLDEF int ascii_to_int(char string[])
 
                 if (current_code == ASCII_MINUS)
                 {
-                    sign = -1;
+                    sign = MINUS_SIGN;
                 }
             }
             else if (!(current_code == ASCII_SPACE))
@@ -128,6 +139,76 @@ MLDEF int ascii_to_int(char string[])
     }
 
     return result * sign;
+}
+
+// Returns the binary representation of a decimal numeral as a string
+MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size)
+{
+    if (!(MIN_DECIMAL_TO_BINARY <= decimal && decimal <= MAX_DECIMAL_TO_BINARY))
+    {
+        assert(0 && "Decimal value is out of allowed range <-32768; 32767>");
+        return NULL;
+    }
+
+    if (buffer_size < BINARY_BUFFER_LENGTH)
+    {
+        assert(0 && "The buffer size must be at least 17 bytes");
+        return NULL;
+    }
+
+    int16_t short_dec = decimal;
+    const char values[] = "01";
+    int low_pow_bound = 0;
+    int remainder = 0;
+    int sign = short_dec / abs(short_dec);
+
+    int start = 0;
+    int end = buffer_size - 2;
+
+    if (sign == PLUS_SIGN)
+    {
+        if (short_dec != 0 && (short_dec & (short_dec - 1)) == 0)
+        {
+            for (int i = end; i >= start; i--)
+            {
+                if (short_dec >> 1 == 0)
+                {
+                    buffer[i] = values[1];
+                    break;
+                }
+                else
+                {
+                    short_dec >>= 1;
+                }
+            }
+        }
+        else
+        {
+            low_pow_bound = 1 << (int)log2(short_dec);
+            remainder = short_dec - low_pow_bound;
+
+            dec_to_binary(low_pow_bound, buffer, buffer_size);
+            dec_to_binary(remainder, buffer, buffer_size);
+        }
+    }
+    else
+    {
+        dec_to_binary(abs(short_dec) - 1, buffer, buffer_size);
+
+        for (int i = start; i <= end; i++)
+        {
+            if (buffer[i] == values[0])
+            {
+                buffer[i] = values[1];
+            }
+            else
+            {
+                buffer[i] = values[0];
+            }
+        }
+    }
+
+    return buffer;
 }
 
 #endif // MINILIB_IMPLEMENTATION
