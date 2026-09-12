@@ -160,7 +160,16 @@ MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size)
     const char values[] = "01";
     int low_pow_bound = 0;
     int remainder = 0;
-    int sign = short_dec / abs(short_dec);
+    int sign = 0;
+
+    if (short_dec != 0)
+    {
+        sign = short_dec / abs(short_dec);
+    }
+    else
+    {
+        return buffer;
+    }
 
     int start = 0;
     int end = buffer_size - 2;
