@@ -18,6 +18,7 @@ MLDEF char *str_reverse(char string[]);
 MLDEF int ascii_to_int(char string[]);
 MLDEF bool is_ascii_digit(int code);
 MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size);
+MLDEF int binary_to_dec(char binary[], size_t size);
 
 #define ASCII_MIN_DIGIT 48
 #define ASCII_MAX_DIGIT 57
@@ -28,7 +29,7 @@ MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size);
 #define PLUS_SIGN 1
 #define MINUS_SIGN -1
 
-#define BINARY_BUFFER_LENGTH 17
+#define BINARY_LENGTH 17
 #define MIN_DECIMAL_TO_BINARY -32768
 #define MAX_DECIMAL_TO_BINARY 32767
 
@@ -150,9 +151,9 @@ MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size)
         return NULL;
     }
 
-    if (buffer_size < BINARY_BUFFER_LENGTH)
+    if (buffer_size != BINARY_LENGTH)
     {
-        assert(0 && "The buffer size must be at least 17 bytes");
+        assert(0 && "The buffer must contain exactly 16 bits");
         return NULL;
     }
 
@@ -218,6 +219,57 @@ MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size)
     }
 
     return buffer;
+}
+
+// Converts a string binary number representation to a decimal integer
+MLDEF int binary_to_dec(char binary[], size_t size)
+{
+    const int start = 0;
+    const int end = size - 2;
+    const char values[] = "01";
+
+    const int base = 2;
+    const char sign_bit = binary[start];
+    int sign = PLUS_SIGN;
+    int result = 0;
+
+    if (size != BINARY_LENGTH)
+    {
+        assert(0 && "The binary number must contain exactly 16 bits");
+        return 0;
+    }
+
+    if (sign_bit == values[0])
+    {
+        for (int i = end; i >= start; i--)
+        {
+            if (binary[i] == values[1])
+            {
+                result += pow(base, end - i);
+            }
+        }
+    }
+    else
+    {
+        for (int i = start; i <= end; i++)
+        {
+            if (binary[i] == values[0])
+            {
+                binary[i] = values[1];
+            }
+            else
+            {
+                binary[i] = values[0];
+            }
+        }
+
+        result = binary_to_dec(binary, size);
+
+        result += 1;
+        sign = MINUS_SIGN;
+    }
+
+    return result * sign;
 }
 
 #endif // MINILIB_IMPLEMENTATION

@@ -35,5 +35,9 @@ int main()
         strcpy(buffer1, null_binary);
     }
 
+    char binary[] = "1111111100000000";
+
+    printf("%d\n", binary_to_dec(binary, sizeof(binary)));
+
     return 0;
 }
