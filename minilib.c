@@ -23,10 +23,17 @@ int main()
     int integer = ascii_to_int(string2);
     printf("%d\n", integer);
 
-    int decimal = -256;
     char buffer1[] = "0000000000000000";
+    const char *null_binary = "0000000000000000";
 
-    printf("%s\n", dec_to_binary(decimal, buffer1, sizeof(buffer1)));
+    const int start = 0;
+    const int end = 8;
+
+    for (int i = start; i <= end; i++)
+    {
+        printf("%s\n", dec_to_binary(i, buffer1, sizeof(buffer1)));
+        strcpy(buffer1, null_binary);
+    }
 
     return 0;
 }
