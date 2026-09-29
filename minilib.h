@@ -19,6 +19,8 @@ MLDEF int ascii_to_int(char string[]);
 MLDEF bool is_ascii_digit(int code);
 MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size);
 MLDEF int binary_to_dec(char binary[], size_t size);
+MLDEF int factorial_R(int n);
+MLDEF int factorial_I(int n);
 
 #define ASCII_MIN_DIGIT 48
 #define ASCII_MAX_DIGIT 57
@@ -236,7 +238,7 @@ MLDEF int binary_to_dec(char binary[], size_t size)
     if (size != BINARY_LENGTH)
     {
         assert(0 && "The binary number must contain exactly 16 bits");
-        return 0;
+        return -1;
     }
 
     if (sign_bit == values[0])
@@ -270,6 +272,42 @@ MLDEF int binary_to_dec(char binary[], size_t size)
     }
 
     return result * sign;
+}
+
+MLDEF int factorial_R(int n)
+{
+    if (n < 0)
+    {
+        return -1;
+    }
+    else if (n == 0)
+    {
+        return 1;
+    }
+
+    return n * factorial_R(n - 1);
+}
+
+MLDEF int factorial_I(int n)
+{
+    if (n < 0)
+    {
+        return -1;
+    }
+    else if (n == 0)
+    {
+        return 1;
+    }
+
+    int result = n;
+
+    while (n > 1)
+    {
+        n -= 1;
+        result *= n;
+    }
+
+    return result;
 }
 
 #endif // MINILIB_IMPLEMENTATION

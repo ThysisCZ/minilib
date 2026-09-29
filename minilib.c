@@ -39,5 +39,15 @@ int main()
 
     printf("%d\n", binary_to_dec(binary, sizeof(binary)));
 
+    for (int i = -3; i < 6; i++)
+    {
+        printf("%d\n", factorial_R(i));
+    }
+
+    for (int i = -3; i < 6; i++)
+    {
+        printf("%d\n", factorial_I(i));
+    }
+
     return 0;
 }
