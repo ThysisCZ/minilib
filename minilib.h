@@ -21,6 +21,8 @@ MLDEF char *dec_to_binary(int decimal, char buffer[], size_t buffer_size);
 MLDEF int binary_to_dec(char binary[], size_t size);
 MLDEF int factorial_R(int n);
 MLDEF int factorial_I(int n);
+MLDEF int fibonacci_R(int n);
+MLDEF int fibonacci_I(int n);
 
 #define ASCII_MIN_DIGIT 48
 #define ASCII_MAX_DIGIT 57
@@ -274,13 +276,15 @@ MLDEF int binary_to_dec(char binary[], size_t size)
     return result * sign;
 }
 
+// Calculates the nth factorial recursively
 MLDEF int factorial_R(int n)
 {
     if (n < 0)
     {
         return -1;
     }
-    else if (n == 0)
+
+    if (n == 0)
     {
         return 1;
     }
@@ -288,13 +292,15 @@ MLDEF int factorial_R(int n)
     return n * factorial_R(n - 1);
 }
 
+// Calculates the nth factorial iteratively
 MLDEF int factorial_I(int n)
 {
     if (n < 0)
     {
         return -1;
     }
-    else if (n == 0)
+
+    if (n == 0)
     {
         return 1;
     }
@@ -305,6 +311,59 @@ MLDEF int factorial_I(int n)
     {
         n -= 1;
         result *= n;
+    }
+
+    return result;
+}
+
+// Calculates the nth Fibonacci element recursively
+MLDEF int fibonacci_R(int n)
+{
+    if (n < 0)
+    {
+        return -1;
+    }
+
+    if (n == 0)
+    {
+        return 0;
+    }
+
+    if (n == 1)
+    {
+        return 1;
+    }
+
+    return fibonacci_R(n - 2) + fibonacci_R(n - 1);
+}
+
+// Calculates the nth Fibonacci element iteratively
+MLDEF int fibonacci_I(int n)
+{
+    if (n < 0)
+    {
+        return -1;
+    }
+
+    int result = 0;
+    int prev1 = 0;
+    int prev2 = 1;
+
+    if (n == 0)
+    {
+        return prev1;
+    }
+
+    if (n == 1)
+    {
+        return prev2;
+    }
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        result = prev1 + prev2;
+        prev1 = prev2;
+        prev2 = result;
     }
 
     return result;

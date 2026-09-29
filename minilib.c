@@ -49,5 +49,15 @@ int main()
         printf("%d\n", factorial_I(i));
     }
 
+    for (int i = -3; i < 6; i++)
+    {
+        printf("%d\n", fibonacci_R(i));
+    }
+
+    for (int i = -3; i < 6; i++)
+    {
+        printf("%d\n", fibonacci_I(i));
+    }
+
     return 0;
 }
